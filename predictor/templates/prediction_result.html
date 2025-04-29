@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID Prediction Result</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #00bcd4;
+            --accent-color: #ff6b6b;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --info-color: #03a9f4;
+            --dark-color: #333;
+            --light-color: #f8f9fa;
+            --white: #ffffff;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --alert-positive: #e6ffe6;
+            --alert-negative: #ffe6e6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--light-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+        
+        .result-card {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        
+        .result-positive {
+            color: var(--success-color);
+        }
+        
+        .result-negative {
+            color: var(--accent-color);
+        }
+        
+        .result-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--text-dark);
+            background: rgba(0, 123, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .result-details {
+            text-align: left;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 123, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .result-details h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .result-details p {
+            margin: 8px 0;
+        }
+        
+        .symptoms-list {
+            text-align: left;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 123, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .symptoms-list h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .symptoms-list ul {
+            list-style-type: none;
+        }
+        
+        .symptoms-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-importance {
+            text-align: left;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 123, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .feature-importance h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .feature-importance ul {
+            list-style-type: none;
+        }
+        
+        .feature-importance li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        
+        .footer {
+            background: var(--dark-color);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result-card">
+            {% if result == 'positive' %}
+                <div class="result-icon result-negative">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h1 class="result-title">COVID-19 Positive</h1>
+            {% else %}
+                <div class="result-icon result-positive">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1 class="result-title">COVID-19 Negative</h1>
+            {% endif %}
+            
+            <p class="result-message">{{ message }}</p>
+            
+            <div class="result-details">
+                <h3>Prediction Details</h3>
+                <p><strong>Risk Percentage:</strong> {{ risk_percent }}%</p>
+                {% if patient_info %}
+                    <p><strong>Name:</strong> {{ patient_info.name }}</p>
+                    <!--<p><strong>Age:</strong> {{ patient_info.age }}</p>
+                    <p><strong>Gender:</strong> {{ patient_info.gender }}</p>
+                    <p><strong>Notes:</strong> {{ patient_info.notes|default:"None" }}</p>-->
+                {% endif %}
+            </div>
+            
+            <div class="symptoms-list">
+                <h3>Your Selected Symptoms:</h3>
+                <ul>
+                    {% for symptom in selected_symptoms %}
+                        <li>{{ symptom }}</li>
+                    {% empty %}
+                        <li>No symptoms selected</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!--<div class="feature-importance">
+                <h3>Key Contributing Factors:</h3>
+                <ul>
+                    {% for feature, importance in feature_importance.items %}
+                        <li>{{ feature }}: {{ importance|floatformat:3 }}</li>
+                    {% empty %}
+                        <li>No feature importance data available</li>
+                    {% endfor %}
+                </ul>
+            </div>-->
+            
+            <div class="action-buttons">
+                <a href="/" class="btn">
+                    <i class="fas fa-home"></i> Return Home
+                </a>
+                {% if result == 'positive' %}
+                    <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public" class="btn btn-accent" target="_blank">
+                        <i class="fas fa-phone-alt"></i> Contact Health Provider
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="copyright">
+            <p>© {% now "Y" %} COVID Detection Portal. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

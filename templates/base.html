@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Password Reset{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* Scope styles to auth pages to avoid conflicts with index.html */
+        .auth-page {
+            --success-color: #4caf50;
+            --error-color: #dc3545;
+            --alert-positive: #e6ffe6;
+            --alert-negative: #ffe6e6;
+        }
+        
+        /* Modal Styles */
+        .auth-page .modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .auth-page .modal.show {
+            display: block;
+        }
+        
+        .auth-page .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 1.5rem;
+            border: 1px solid #888;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .auth-page .close {
+            position: absolute;
+            right: 1rem;
+            top: 0.5rem;
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .auth-page .close:hover {
+            color: #333;
+        }
+        
+        .auth-page .modal-title {
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        
+        /* Form Styles */
+        .auth-page .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .auth-page .form-control {
+            padding: 0.75rem;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            font-size: 1rem;
+        }
+        
+        .auth-page .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        
+        .auth-page .btn-accent {
+            background-color: #4a6baf;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            width: 100%;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .auth-page .btn-accent:hover {
+            background-color: #3a5691;
+        }
+        
+        .auth-page .btn-accent:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .auth-page .error-message {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            color: var(--error-color);
+            background: var(--alert-negative);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .auth-page .success-message {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            color: var(--success-color);
+            background: var(--alert-positive);
+            padding: 0.5rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .auth-page .text-danger {
+            color: var(--error-color) !important;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .auth-page .modal-content {
+                max-width: 90%;
+                padding: 1rem;
+            }
+            .auth-page .modal-title {
+                font-size: 1.25rem;
+            }
+            .auth-page .form-control {
+                font-size: 0.9rem;
+            }
+            .auth-page .btn-accent {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body class="auth-page">
+    <!-- Main Content Block -->
+    {% block content %}
+    <!-- Content from child templates will go here -->
+    {% endblock %}
+
+    <!-- Common JavaScript -->
+    <script>
+        // Global modal close function with optional redirect
+        function closeModal(modalId, redirectUrl = null) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            if (redirectUrl) {
+                window.location.href = redirectUrl;
+            }
+        }
+        
+        // Clear form errors
+        function clearFormErrors(formId) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.querySelectorAll('.error-message').forEach(error => {
+                    error.textContent = '';
+                });
+                form.querySelectorAll('.form-control').forEach(input => {
+                    input.classList.remove('is-invalid');
+                });
+            }
+        }
+        
+        // Close modal when clicking outside content
+        document.addEventListener('click', function(event) {
+            const modals = document.querySelectorAll('.modal.show');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
+    </script>
+    
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Additional scripts block -->
+    {% block extra_scripts %}
+    {% endblock %}
+</body>
+</html>
